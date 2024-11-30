@@ -7,7 +7,7 @@ const cors = require('cors');
 // Configuration
 const PORT = process.env.PORT || 3000;
 const allowedOrigins = [
-  'https://chat-socket-io-funny.netlify.app', // Frontend URL (Netlify)
+  'https://chat-socket-io-funny.netlify.app', // New frontend URL (Netlify)
 ];
 
 // App and Server Setup
@@ -31,7 +31,7 @@ app.use(
 // Socket.IO Initialization with CORS
 const io = socketIo(server, {
   cors: {
-    origin: allowedOrigins, // Match with frontend origin
+    origin: allowedOrigins, // Allow the frontend to connect from this URL
     methods: ['GET', 'POST'], // Allow specific HTTP methods
   },
 });
