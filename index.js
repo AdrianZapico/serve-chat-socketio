@@ -13,7 +13,7 @@ const app = express();
 const server = http.createServer(app);
 
 // CORS Configuration
-const allowedOrigins = ['chat-for-funny.netlify.app'];
+const allowedOrigins = ['https://glittering-phoenix-76231f.netlify.app/'];
 app.use(
   cors({
     origin: (origin, callback) => {
