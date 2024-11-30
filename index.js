@@ -6,14 +6,15 @@ const cors = require('cors');
 
 // Configuration
 const PORT = process.env.PORT || 3000;
-const isProduction = process.env.NODE_ENV === 'production';
+const allowedOrigins = [
+  'https://glittering-phoenix-76231f.netlify.app', // Frontend URL (Netlify)
+];
 
 // App and Server Setup
 const app = express();
 const server = http.createServer(app);
 
 // CORS Configuration
-const allowedOrigins = ['https://glittering-phoenix-76231f.netlify.app/'];
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -44,16 +45,18 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
   console.log('A user connected');
 
+  // Handle 'chat message' events
   socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
+    io.emit('chat message', msg); // Emit message to all connected clients
   });
 
+  // Handle disconnection
   socket.on('disconnect', () => {
     console.log('A user disconnected');
   });
 });
 
-// Server Start
+// Start Server
 server.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
