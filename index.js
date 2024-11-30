@@ -7,7 +7,7 @@ const cors = require('cors');
 // Configuration
 const PORT = process.env.PORT || 3000;
 const allowedOrigins = [
-  'https://chat-socket-io-funny.netlify.app/', // Frontend URL (Netlify)
+  'https://chat-socket-io-funny.netlify.app', // Frontend URL (Netlify)
 ];
 
 // App and Server Setup
