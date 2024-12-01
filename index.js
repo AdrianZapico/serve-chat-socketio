@@ -7,8 +7,9 @@ const cors = require('cors');
 // Constants
 const PORT = process.env.PORT || 3000;
 const allowedOrigins = [
-  'https://chat-socket-test-io.netlify.app', // Frontend URL
-];
+    'https://chat-socket-test-io.netlify.app', // URL do seu frontend
+    'http://localhost:3000',  // URL local para desenvolvimento
+  ];
 
 // Initialize Express and Server
 const app = express();
