@@ -19,6 +19,20 @@ const io = socketIo(server, {
   }
 });
 
+// Evento de conexão
+io.on('connection', (socket) => {
+  console.log('Novo usuário conectado');
+  
+  socket.on('chat message', (msg) => {
+    console.log('Mensagem recebida:', msg);
+    io.emit('chat message', msg); // Envia a mensagem para todos os clientes conectados
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Usuário desconectado');
+  });
+});
+
 server.listen(3000, () => {
-  console.log('Server is running on port 3000');
+  console.log('Servidor rodando na porta 3000');
 });
