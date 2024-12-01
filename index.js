@@ -6,9 +6,7 @@ const cors = require('cors');
 
 // Configuration
 const PORT = process.env.PORT || 3000;
-const allowedOrigins = [
-  'https://chat-socket-io-funny.netlify.app', // New frontend URL (Netlify)
-];
+const allowedOrigins = ['https://chat-socket-io-funny.netlify.app']; // Allowed frontend URL
 
 // App and Server Setup
 const app = express();
@@ -17,46 +15,41 @@ const server = http.createServer(app);
 // CORS Configuration
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+    origin: allowedOrigins, // Restrict origins to allowed URLs
+    methods: ['GET', 'POST'], // Allow GET and POST methods
+    credentials: true, // Enable credentials sharing
   })
 );
 
 // Socket.IO Initialization with CORS
 const io = socketIo(server, {
   cors: {
-    origin: allowedOrigins, // Allow the frontend to connect from this URL
-    methods: ['GET', 'POST'], // Allow specific HTTP methods
+    origin: allowedOrigins, // Match frontend URL
+    methods: ['GET', 'POST'],
   },
 });
 
 // Routes
 app.get('/', (req, res) => {
-  res.send('Hello, World!');
+  res.send('Server is running');
 });
 
 // Socket.IO Events
 io.on('connection', (socket) => {
-  console.log('A user connected');
+  console.log('A user connected:', socket.id);
 
-  // Handle 'chat message' events
+  // Broadcast received message to all connected clients
   socket.on('chat message', (msg) => {
-    io.emit('chat message', msg); // Emit message to all connected clients
+    io.emit('chat message', msg);
   });
 
-  // Handle disconnection
+  // Log disconnection
   socket.on('disconnect', () => {
-    console.log('A user disconnected');
+    console.log('A user disconnected:', socket.id);
   });
 });
 
 // Start Server
 server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
