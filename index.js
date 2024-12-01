@@ -1,55 +1,45 @@
-// Dependencies
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const cors = require('cors');
 
-// Configuration
-const PORT = process.env.PORT || 3000;
-const allowedOrigins = ['https://chat-socket-io-funny.netlify.app']; // Allowed frontend URL
-
-// App and Server Setup
 const app = express();
 const server = http.createServer(app);
 
 // CORS Configuration
+const allowedOrigins = [
+  'https://chat-socket-test-io.netlify.app', // Frontend URL
+];
+
 app.use(
   cors({
-    origin: allowedOrigins, // Restrict origins to allowed URLs
-    methods: ['GET', 'POST'], // Allow GET and POST methods
-    credentials: true, // Enable credentials sharing
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
   })
 );
 
-// Socket.IO Initialization with CORS
 const io = socketIo(server, {
   cors: {
-    origin: allowedOrigins, // Match frontend URL
+    origin: allowedOrigins,
     methods: ['GET', 'POST'],
   },
 });
 
-// Routes
-app.get('/', (req, res) => {
-  res.send('Server is running');
-});
-
-// Socket.IO Events
 io.on('connection', (socket) => {
-  console.log('A user connected:', socket.id);
-
-  // Broadcast received message to all connected clients
+  console.log('A user connected');
   socket.on('chat message', (msg) => {
     io.emit('chat message', msg);
   });
-
-  // Log disconnection
   socket.on('disconnect', () => {
-    console.log('A user disconnected:', socket.id);
+    console.log('A user disconnected');
   });
 });
 
-// Start Server
-server.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+server.listen(3000, () => {
+  console.log('Server is running on port 3000');
 });
